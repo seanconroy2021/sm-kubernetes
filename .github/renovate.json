@@ -3,7 +3,6 @@
   "extends": ["github>bitwarden/renovate-config"],
   "enabledManagers": [
     "cargo",
-    "devcontainer",
     "dockerfile",
     "github-actions",
     "gomod",
@@ -12,36 +11,43 @@
   "constraints": {
     "go": "1.21"
   },
+  "prCreation": "immediate",
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "merge-commit",
+  "requiredStatusChecks": [
+    "CI & Release / Run Tests"
+  ],
   "packageRules": [
     {
       "groupName": "cargo minor",
       "matchManagers": ["cargo"],
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "groupName": "devcontainer minor",
-      "matchManagers": ["devcontainer"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "groupName": "dockerfile minor",
       "matchManagers": ["dockerfile"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "groupName": "gh minor",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "groupName": "go minor",
       "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "groupName": "npm minor",
       "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }

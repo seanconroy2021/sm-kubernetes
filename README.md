@@ -1,3 +1,7 @@
+> ⚠️ Notice ⚠️ 
+> This is a fork of [bitwarden/sm-kubernetes](https://github.com/bitwarden/sm-kubernetes).  
+> The maintainers of this fork are not affiliated with Bitwarden and assume no warranty, guarantee, or security liability for changes introduced here.
+
 # Bitwarden Secrets Manager Kubernetes Operator
 
 This Operator is a tool for teams to integrate Bitwarden Secrets Manager into their Kubernetes workflows seamlessly.
