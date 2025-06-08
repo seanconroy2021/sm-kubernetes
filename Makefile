@@ -121,8 +121,18 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 .PHONY: test
-test: manifests generate fmt vet envtest ## Run tests.
-	CC=musl-gcc KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path)" go test -ldflags '-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all"' ./... -coverprofile cover.out
+test: manifests generate fmt vet envtest
+ifeq ($(shell uname),Darwin)
+	$(info Running tests on macOS with clang…)
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path)" \
+	go test ./... -coverprofile cover.out
+else
+	$(info Running tests with musl-gcc…)
+	CC=musl-gcc \
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path)" \
+	go test -ldflags='-linkmode external -extldflags "-static -Wl,-unresolved-symbols=ignore-all"' \
+	./... -coverprofile cover.out
+endif
 
 ##@ Build
 

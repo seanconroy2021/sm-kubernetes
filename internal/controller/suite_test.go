@@ -141,6 +141,7 @@ var _ = Describe("Bitwarden Secrets Controller", Ordered, func() {
 	name := "bw-secret"
 	secretName := "bitwarden-k8s-secret-sample"
 	count := 10
+	expectedCount := 3
 	timeout := time.Second * 10
 	interval := time.Millisecond * 250
 
@@ -476,17 +477,14 @@ var _ = Describe("Bitwarden Secrets Controller", Ordered, func() {
 			return true
 		}))
 
-		Expect(len(k8sSecret.Data)).Should(Equal(count))
-		for i := 0; i < count; i++ {
-			var id string
-			if i < 3 {
-				id = customMapping[i].SecretKeyName
-			} else {
-				id = bwSecretsResponse.Secrets[i].ID
-			}
+		Expect(len(k8sSecret.Data)).Should(Equal(expectedCount))
+		for i := 0; i < len(customMapping); i++ {
+			if i < expectedCount {
+				id := customMapping[i].SecretKeyName
 
-			value := bwSecretsResponse.Secrets[i].Value
-			Expect(string(k8sSecret.Data[id])).Should(Equal(value))
+				value := bwSecretsResponse.Secrets[i].Value
+				Expect(string(k8sSecret.Data[id])).Should(Equal(value))
+			}
 		}
 
 		statYear, statMonth, statDay := bwSecret.Status.LastSuccessfulSyncTime.UTC().Date()

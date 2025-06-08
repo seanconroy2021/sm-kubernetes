@@ -280,18 +280,20 @@ func CreateK8sSecret(bwSecret *operatorsv1.BitwardenSecret) *corev1.Secret {
 }
 
 func ApplySecretMap(bwSecret *operatorsv1.BitwardenSecret, secret *corev1.Secret) {
-	if secret.Data == nil {
-		secret.Data = map[string][]byte{}
+	// If no explicit map is provided, leave all values in place
+	if bwSecret.Spec.SecretMap == nil {
+		return
 	}
 
-	if bwSecret.Spec.SecretMap != nil {
-		for _, mappedSecret := range bwSecret.Spec.SecretMap {
-			if value, containsKey := secret.Data[mappedSecret.BwSecretId]; containsKey {
-				secret.Data[mappedSecret.SecretKeyName] = value
-				delete(secret.Data, mappedSecret.BwSecretId)
-			}
+	// Otherwise, build a new Data map with only the mapped keys
+	filtered := make(map[string][]byte, len(bwSecret.Spec.SecretMap))
+	for _, m := range bwSecret.Spec.SecretMap {
+		if v, ok := secret.Data[m.BwSecretId]; ok {
+			filtered[m.SecretKeyName] = v
 		}
 	}
+
+	secret.Data = filtered
 }
 
 func SetK8sSecretAnnotations(bwSecret *operatorsv1.BitwardenSecret, secret *corev1.Secret) error {
