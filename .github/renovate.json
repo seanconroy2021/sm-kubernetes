@@ -14,9 +14,9 @@
   "prCreation": "immediate",
   "automerge": true,
   "automergeType": "pr",
-  "automergeStrategy": "merge-commit",
   "requiredStatusChecks": [
-    "CI & Release / Run Tests"
+    "CI & Release / Run Tests",
+    "CI & Release / Check Containerfile Build"
   ],
   "packageRules": [
     {
