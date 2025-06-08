@@ -33,9 +33,23 @@ jobs:
       - name: Run tests
         run: make test
 
+  container-test:
+    name: Check Containerfile Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Containerfile builds
+        run: docker build -f ./Containerfile .
+
   build-and-push:
     name: Build, Sign & Push
-    needs: test
+    needs: 
+      - test
+      - container-test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
